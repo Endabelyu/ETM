@@ -15,7 +15,7 @@ type DialogProps = {
   titleDialog: string;
   titleDescription: string;
   functionSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  functionChange: (name: string, value: string) => void;
+  functionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   formPayload: payloadForms;
   open?: boolean;
   setOpen: (toggleDialog: boolean) => void;
@@ -54,9 +54,7 @@ export function DialogForm({
                 value={formPayload.name}
                 className='tailwind.config.jscol-span-3'
                 onChange={(e) => {
-                  const name = e.target.name;
-                  const value = e.target.value;
-                  functionChange(name, value);
+                  functionChange(e);
                 }}
                 required
               />
@@ -74,9 +72,7 @@ export function DialogForm({
                 placeholder='low'
                 value={formPayload.priority}
                 onChange={(e) => {
-                  const name = e.target.name;
-                  const value = e.target.value;
-                  functionChange(name, value);
+                  functionChange(e);
                 }}
                 required
               />
@@ -94,9 +90,7 @@ export function DialogForm({
                 value={formPayload.status}
                 placeholder='To do'
                 onChange={(e) => {
-                  const name = e.target.name;
-                  const value = e.target.value;
-                  functionChange(name, value);
+                  functionChange(e);
                 }}
                 required
               />

@@ -1,10 +1,9 @@
 import { Input } from '../ui/input';
-import { Button } from '../ui/button';
 
 type searchProps = {
   setSearch: (searchValue: string) => void;
 };
-const Searcbar = ({ setSearch }: searchProps) => {
+const Searchbar = ({ setSearch }: searchProps) => {
   return (
     <div className='tailwind.config.jsflex tailwind.config.jsmin-w-1/2  tailwind.config.jsmax-w-sm tailwind.config.jsitems-center tailwind.config.jsgap-2 tailwind.config.jsspace-x-2'>
       <Input
@@ -14,9 +13,8 @@ const Searcbar = ({ setSearch }: searchProps) => {
         className=''
         onChange={(e) => setSearch(e.target.value)}
       />
-      <Button type='submit'>Search</Button>
     </div>
   );
 };
 
-export default Searcbar;
+export default Searchbar;

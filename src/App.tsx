@@ -2,11 +2,11 @@ import './App.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import BaseLayout from '@/components/organism/baseLayout';
 
-import { DialogForm } from '@/components/moleculs/dialog-form';
+import { DialogForm } from '@/components/molecules/dialog-form';
 import React, { useEffect, useState } from 'react';
 import { getDataStorage } from './lib/helper/storage';
-import Tasklist from '@/components/moleculs/tasklist';
-import Searcbar from './components/moleculs/searcbar';
+import Tasklist from '@/components/molecules/tasklist';
+import Searchbar from './components/molecules/searchbar';
 
 export type Task = {
   id: number;
@@ -30,11 +30,9 @@ function App() {
 
   // set Tasklist value when page refreshed
   useEffect(() => {
-    if (taskList.length === 0) {
-      const taskData = JSON.parse(localStorage.getItem('task') || '[]');
-      setTaskList(taskData);
-    }
-  }, [taskList]);
+    const taskData = JSON.parse(localStorage.getItem('task') || '[]');
+    setTaskList(taskData);
+  }, []);
 
   // filter tasklist value when searchValue and tasklist data available
   useEffect(() => {
@@ -47,7 +45,7 @@ function App() {
       );
       setFilteredTask(searchData);
     } else {
-      setFilteredTask([]);
+      setFilteredTask(taskList);
     }
   }, [searchValue, taskList]);
 
@@ -62,7 +60,6 @@ function App() {
       setToggleDialog(false);
     } else {
       const currentTaskData = getDataStorage('task');
-      console.log('🚀 ~ handleSubmit ~  currentTaskData:', currentTaskData);
       setTaskList([...taskList, fullPayload]);
       currentTaskData.push(fullPayload);
       localStorage.setItem('task', JSON.stringify(currentTaskData));
@@ -71,7 +68,10 @@ function App() {
     }
   }
 
-  function handleChange(name: string, value: string) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    const name = e.target.name;
+    console.log(e, e.target, e.target.value, e.target.name, 'event change');
     setPayloadForm({
       ...payloadForm,
       [name]: value,
@@ -82,8 +82,8 @@ function App() {
     <>
       <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
         <BaseLayout>
-          <div className='tailwind.config.jsmb-4 tailwind.config.jsflex tailwind.config.jsgap-8 tailwind.config.jsjustify-evenly '>
-            <Searcbar setSearch={setSearchValue} />
+          <div className='tailwind.config.jsmy-4 tailwind.config.jsflex tailwind.config.jsgap-8 tailwind.config.jsjustify-evenly '>
+            <Searchbar setSearch={setSearchValue} />
             <DialogForm
               buttonDesc='Create Task'
               titleDialog='Your Journey Begins Here!'
@@ -95,9 +95,7 @@ function App() {
               setOpen={setToggleDialog}
             />
           </div>
-          <Tasklist
-            taskData={filteredTask.length > 0 ? filteredTask : taskList}
-          />
+          <Tasklist taskData={filteredTask} />
         </BaseLayout>
       </ThemeProvider>
     </>

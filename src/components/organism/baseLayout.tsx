@@ -1,5 +1,5 @@
 import React, { Children } from 'react';
-import Navbar from '../moleculs/navbar';
+import Navbar from '../molecules/navbar';
 
 const BaseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
