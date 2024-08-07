@@ -1,5 +1,5 @@
-import { payloadForms } from '@/App';
-import { Button } from '@/components/ui/button';
+import { payloadForms } from "@/App";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,21 +7,21 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { InputSelect, optionSelect } from "../atoms/inputSelect";
 type DialogProps = {
   buttonDesc: string;
   titleDialog: string;
   titleDescription: string;
   functionSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  functionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  functionChange: (value: string, name: string) => void;
   formPayload: payloadForms;
   open?: boolean;
   setOpen: (toggleDialog: boolean) => void;
 };
 export function DialogForm({
-  buttonDesc,
   titleDialog,
   titleDescription,
   functionSubmit,
@@ -30,73 +30,124 @@ export function DialogForm({
   open,
   setOpen,
 }: DialogProps) {
+  const statusOption: optionSelect[] = [
+    {
+      id: "S-1",
+      value: "S-1",
+      title: "To-do",
+    },
+    {
+      id: "S-2",
+      value: "S-2",
+      title: "Doing",
+    },
+    {
+      id: "S-3",
+      value: "S-3",
+      title: "Done",
+    },
+  ];
+  const priotityOption: optionSelect[] = [
+    {
+      id: "P-1",
+      value: "P-1",
+      title: "Low",
+    },
+    {
+      id: "P-2",
+      value: "P-2",
+      title: "Medium",
+    },
+    {
+      id: "P-3",
+      value: "P-3",
+      title: "High",
+    },
+  ];
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button variant='outline' onClick={() => setOpen(!open)}>
-        {buttonDesc}
-      </Button>
-
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{titleDialog}</DialogTitle>
-          <DialogDescription className=''>{titleDescription}</DialogDescription>
+          <DialogDescription className="">{titleDescription}</DialogDescription>
         </DialogHeader>
         <form onSubmit={functionSubmit}>
-          <div className='tailwind.config.jsgrid tailwind.config.jsgap-6 tailwind.config.jspy-4 '>
-            <div className='tailwind.config.jsgrid tailwind.config.jsgrid-cols-6 tailwind.config.jsitems-center tailwind.config.jsgap-4'>
-              <Label htmlFor='name' className='tailwind.config.jscol-span-1'>
+          <div className="grid gap-6 py-4">
+            <div className="grid grid-cols-6 items-center gap-4">
+              <Label htmlFor="name" className="col-span-1">
                 Task
               </Label>
               <Input
-                id='name'
-                name='name'
-                placeholder='Attend Bearmentor bootcamp'
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Attend Bearmentor bootcamp"
                 value={formPayload.name}
-                className='tailwind.config.jscol-span-3'
+                className="col-span-3"
                 onChange={(e) => {
-                  functionChange(e);
+                  functionChange(e.target.value, e.target.name);
                 }}
                 required
               />
             </div>
-            <div className='tailwind.config.jsgrid tailwind.config.jsgrid-cols-6 tailwind.config.jsitems-center tailwind.config.jsgap-4'>
-              <Label
-                htmlFor='username'
-                className='tailwind.config.jscol-span-1'
-              >
+            <div className="grid grid-cols-6 items-center gap-4">
+              <Label htmlFor="username" className="col-span-1">
                 Priority
               </Label>
-              <Input
-                id='priority'
-                name='priority'
-                placeholder='low'
+              {/* <Input
+                type="text"
+                id="priority"
+                name="priority"
+                placeholder="low"
                 value={formPayload.priority}
                 onChange={(e) => {
-                  functionChange(e);
+                  functionChange(e.target.value, e.target.name);
                 }}
                 required
+              /> */}
+              <InputSelect
+                name="priority"
+                value={formPayload.priority}
+                placeholder="Select task priority"
+                optionList={priotityOption}
+                onChange={(value) => {
+                  console.log("change prio", value);
+                  functionChange(value, "priority");
+                }}
+                required={true}
               />
             </div>
-            <div className='tailwind.config.jsgrid tailwind.config.jsgrid-cols-6 tailwind.config.jsitems-center tailwind.config.jsgap-4'>
-              <Label
-                htmlFor='username'
-                className='tailwind.config.jscol-span-1'
-              >
+            <div className="grid grid-cols-6 items-center gap-4">
+              <Label htmlFor="username" className="col-span-1">
                 Status
               </Label>
-              <Input
-                id='status'
-                name='status'
+              {/* <Input
+                type="text"
+                id="status"
+                name="status"
                 value={formPayload.status}
-                placeholder='To do'
-                onChange={(e) => {
-                  functionChange(e);
+                placeholder="To do"
+                onChange={(value) => {
+                  functionChange(value, "status");
                 }}
                 required
+              /> */}
+              <InputSelect
+                name="status"
+                value={formPayload.status}
+                placeholder="Select task status"
+                optionList={statusOption}
+                onChange={(value) => {
+                  console.log("change", value);
+                  functionChange(value, "status");
+                }}
+                required={true}
               />
             </div>
+
             <DialogFooter>
-              <Button type='submit'>Create Task</Button>
+              <Button type="submit">Create Task</Button>
             </DialogFooter>
           </div>
         </form>
