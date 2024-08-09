@@ -12,7 +12,8 @@ function App() {
   const [taskData, setTaskData] = useState<TaskList[]>(initialData);
   const localData: TaskList[] = JSON.parse(localStorage.getItem("taskList")!);
   const [toggleDialog, setToggleDialog] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
+  const [isEdit, setIsEdit] = useState(false);
+  // const [searchValue, setSearchValue] = useState("");
   // set Tasklist value when page refreshed
   // useEffect(() => {
   //   const taskData = JSON.parse(localStorage.getItem("task") || "[]");
@@ -46,43 +47,73 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if (toggleDialog === false) {
+      setPayloadForm({} as payloadForms);
+      setIsEdit(false);
+    }
+  }, [toggleDialog]);
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const newId: string = Math.random().toString(36).slice(2, 11).toUpperCase();
+    const { id, status } = payloadForm;
 
-    const fullPayload = { ...payloadForm, id: `E-${newId}`, finish: false };
-    const columnDestination = localData.find(
-      (task) => task.id === fullPayload.status,
-    )!;
-    columnDestination.tasks = [...columnDestination.tasks, fullPayload];
-    const updateData = localData.map((column) =>
-      column.id === columnDestination.id ? columnDestination : column,
-    );
+    if (isEdit) {
+      const currentColumnId = localData.find((column) =>
+        column.tasks.some((task) => task.id === id),
+      )?.id;
+      // Editing existing task
+      if (currentColumnId) {
+        const currentColumn = localData.find(
+          (column) => column.id === currentColumnId,
+        );
+        const targetColumn = localData.find((column) => column.id === status);
 
-    localStorage.setItem("taskList", JSON.stringify(updateData));
-    // console.log(updateData, "data");
-    setTaskData(
-      localData.map((column) => {
-        if (columnDestination !== undefined) {
-          if (column.id === columnDestination.id) {
-            return columnDestination;
-          }
+        if (currentColumn && targetColumn) {
+          // Remove task from current column
+          currentColumn.tasks = currentColumn.tasks.filter(
+            (task) => task.id !== id,
+          );
+
+          // Update task data
+          const updatedTask = { ...payloadForm, id };
+          targetColumn.tasks = [...targetColumn.tasks, updatedTask];
+
+          // Update localData
+          const updateData = localData.map((column) =>
+            column.id === currentColumnId
+              ? currentColumn
+              : column.id === status
+                ? targetColumn
+                : column,
+          );
+
+          localStorage.setItem("taskList", JSON.stringify(updateData));
+          setTaskData(updateData);
         }
-        return column;
-      }),
-    );
+      }
+    } else {
+      // Adding new task
+      const newId: string = Math.random()
+        .toString(36)
+        .slice(2, 11)
+        .toUpperCase();
+      const fullPayload = { ...payloadForm, id: `E-${newId}`, finish: false };
+      const targetColumn = localData.find((column) => column.id === status);
 
-    // if (!localStorage.getItem("task")) {
-    //   setTaskList([...taskList, fullPayload]);
-    //   setPayloadForm({} as payloadForms);
-    //   setToggleDialog(false);
-    // } else {
-    //   const currentTaskData = getDataStorage("task");
-    //   setTaskList([...taskList, fullPayload]);
-    //   currentTaskData.push(fullPayload);
-    //   localStorage.setItem("task", JSON.stringify(currentTaskData));
-    // }
+      if (targetColumn) {
+        targetColumn.tasks = [...targetColumn.tasks, fullPayload];
+        const updateData = localData.map((column) =>
+          column.id === status ? targetColumn : column,
+        );
+
+        localStorage.setItem("taskList", JSON.stringify(updateData));
+        setTaskData(updateData);
+      }
+    }
+
+    // Reset the form and close the dialog
     setPayloadForm({} as payloadForms);
     setToggleDialog(false);
   }
@@ -97,7 +128,7 @@ function App() {
   return (
     <>
       <ThemeProvider defaultTheme={"light"} storageKey="vite-ui-theme">
-        <BaseLayout setSearchValue={setSearchValue}>
+        <BaseLayout>
           <div className="flex w-9/12 flex-col">
             <div className="my-4 flex justify-evenly gap-8">
               <DialogForm
@@ -107,6 +138,7 @@ function App() {
                 functionSubmit={handleSubmit}
                 functionChange={handleChange}
                 formPayload={payloadForm}
+                isEdit={isEdit}
                 open={toggleDialog}
                 setOpen={setToggleDialog}
               />
@@ -115,6 +147,7 @@ function App() {
               setOpen={setToggleDialog}
               listTask={taskData}
               setListTask={setTaskData}
+              setEdit={setIsEdit}
               setPayload={setPayloadForm}
               formPayload={payloadForm}
             />
