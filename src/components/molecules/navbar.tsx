@@ -1,43 +1,16 @@
-import React from "react";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "../ui/navigation-menu";
-import { cn } from "@/lib/utils";
-import { Search } from "lucide-react";
-import Searchbar from "./searchbar";
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
 import { useTheme } from "@/components/theme-provider";
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-];
-type navbarProps = {
-  setSearchValue: (search: string) => void;
-};
-const Navbar = ({ setSearchValue }: navbarProps) => {
+
+// type navbarProps = {
+//   setSearchValue?: (search: string) => void;
+// };
+const Navbar = () => {
   const { setTheme } = useTheme();
   return (
     <>

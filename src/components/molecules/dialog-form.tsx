@@ -1,4 +1,3 @@
-import { payloadForms } from "@/App";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { InputSelect, optionSelect } from "../atoms/inputSelect";
+import { payloadForms } from "@/models/task";
 type DialogProps = {
   buttonDesc: string;
   titleDialog: string;
@@ -19,6 +19,7 @@ type DialogProps = {
   functionChange: (value: string, name: string) => void;
   formPayload: payloadForms;
   open?: boolean;
+  isEdit?: boolean;
   setOpen: (toggleDialog: boolean) => void;
 };
 export function DialogForm({
@@ -28,6 +29,7 @@ export function DialogForm({
   functionChange,
   formPayload,
   open,
+  isEdit,
   setOpen,
 }: DialogProps) {
   const statusOption: optionSelect[] = [
@@ -66,7 +68,7 @@ export function DialogForm({
   ];
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen} modal={true}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{titleDialog}</DialogTitle>
@@ -147,7 +149,9 @@ export function DialogForm({
             </div>
 
             <DialogFooter>
-              <Button type="submit">Create Task</Button>
+              <Button type="submit">
+                {isEdit ? "Edit Task" : "Create Task"}
+              </Button>
             </DialogFooter>
           </div>
         </form>
