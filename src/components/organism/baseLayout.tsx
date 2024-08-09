@@ -3,15 +3,15 @@ import Navbar from "@/components/molecules/navbar";
 import Sidebar from "../molecules/sidebar";
 type baseLayoutProps = {
   children: React.ReactNode;
-  setSearchValue: (search: string) => void;
+  setSearchValue?: (search: string) => void;
 };
 const BaseLayout = ({
   children,
-  setSearchValue: searchValue,
+  // setSearchValue: searchValue,
 }: baseLayoutProps) => {
   return (
     <div className="flex flex-col">
-      <Navbar setSearchValue={searchValue} />
+      <Navbar />
       <div className="flex gap-8">
         <Sidebar />
         {children}

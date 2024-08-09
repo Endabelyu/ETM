@@ -1,12 +1,11 @@
-import React from 'react';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Task } from '@/App';
+} from "@/components/ui/card";
+import { Task } from "@/models/task";
 
 const Tasklist = ({ taskData }: { taskData: Task[] }) => {
   return (
