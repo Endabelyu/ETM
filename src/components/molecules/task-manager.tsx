@@ -120,15 +120,15 @@ const TaskManager = ({
     );
   };
   return (
-    <div className="flex h-full justify-between gap-8">
+    <div className="flex justify-between gap-8">
       {listTask && listTask.length > 0 ? (
         listTask.map((column, index) => (
           <div
             key={column.title}
-            className={`h-full w-4/12 rounded-md border-2`}
+            className={`h-[90vh] w-4/12 rounded-md border-2`}
           >
             <div
-              className={`mb-6 flex justify-between p-2 ${column.id === "S-1" ? "bg-slate-300" : column.id === "S-2" ? "bg-blue-300" : "bg-green-300"}`}
+              className={`mb-3 flex justify-between p-2 ${column.id === "S-1" ? "bg-slate-300" : column.id === "S-2" ? "bg-blue-300" : "bg-green-300"}`}
             >
               <h2 className="text-left text-xl font-semibold text-slate-700">
                 {column.title}
@@ -168,7 +168,7 @@ const TaskManager = ({
               key={column.id}
               onDrop={(event) => onDrop(event, column.id)}
               onDragOver={(event) => onDragOver(event, index)}
-              className="flex h-full flex-col gap-4 p-2"
+              className="flex h-[85%] flex-col gap-4 overflow-auto p-2"
             >
               {column.tasks.map((task) => (
                 <div
