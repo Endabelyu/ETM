@@ -10,11 +10,11 @@ const BaseLayout = ({
   // setSearchValue: searchValue,
 }: baseLayoutProps) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex min-h-screen flex-col">
       <Navbar />
       <div className="flex gap-8">
         <Sidebar />
-        {children}
+        <div className="w-9/12 py-8">{children}</div>
       </div>
     </div>
   );

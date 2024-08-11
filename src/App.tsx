@@ -129,8 +129,8 @@ function App() {
     <>
       <ThemeProvider defaultTheme={"light"} storageKey="vite-ui-theme">
         <BaseLayout>
-          <div className="flex w-9/12 flex-col">
-            <div className="my-4 flex justify-evenly gap-8">
+          <div className="flex flex-col">
+            <div className="flex justify-evenly gap-8">
               <DialogForm
                 buttonDesc="Create Task"
                 titleDialog="Your Journey Begins Here!"
