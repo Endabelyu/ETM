@@ -15,11 +15,12 @@ const Searchbar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [filteredTasks, setFilteredTasks] = useState<IFilteredTask[]>([]);
-  const [setWorkspaces] = useState<workspaceData[]>([]);
+  const [workspaceDatas, setWorkspaces] = useState<workspaceData[]>([]);
   const navigate = useNavigate();
   useEffect(() => {
     const storedWorkspaces = getWorkspaces();
     setWorkspaces(storedWorkspaces);
+    console.log(workspaceDatas, "datas");
   }, []);
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const workspaces: workspaceData[] = JSON.parse(
