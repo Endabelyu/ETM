@@ -1,159 +1,62 @@
+import { useNavigate } from "react-router-dom";
 import "./App.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import BaseLayout from "@/components/organism/baseLayout";
-
-import { DialogForm } from "@/components/molecules/dialog-form";
-import React, { useEffect, useState } from "react";
-import TaskManager from "./components/molecules/task-manager";
-import { TaskList, initialData, payloadForms } from "./models/task";
+import { Input } from "./components/ui/input";
+import { useState } from "react";
+import { Button } from "./components/ui/button";
+import { cn } from "./lib/utils";
+import { useToast } from "./components/ui/use-toast";
 
 function App() {
-  const [payloadForm, setPayloadForm] = useState({} as payloadForms);
-  const [taskData, setTaskData] = useState<TaskList[]>(initialData);
-  const localData: TaskList[] = JSON.parse(localStorage.getItem("taskList")!);
-  const [toggleDialog, setToggleDialog] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
-  // const [searchValue, setSearchValue] = useState("");
-  // set Tasklist value when page refreshed
-  // useEffect(() => {
-  //   const taskData = JSON.parse(localStorage.getItem("task") || "[]");
-  // }, []);
-
-  // filter tasklist value when searchValue and tasklist data available
-
-  // useEffect(() => {
-  //   localStorage.setItem("task", JSON.stringify(taskList));
-  // }, [taskList]);
-
-  // useEffect(() => {
-  //   if (searchValue && taskData.tas.length > 0) {
-  //     const searchData = taskList.filter(
-  //       (task) =>
-  //         task.name.includes(searchValue) ||
-  //         task.priority.includes(searchValue) ||
-  //         task.status.includes(searchValue),
-  //     );
-  //     setFilteredTask(searchData);
-  //   } else {
-  //     setFilteredTask(taskList);
-  //   }
-  // }, [searchValue, taskList]);
-  useEffect(() => {
-    if ("taskList" in localStorage) {
-      const localData = JSON.parse(localStorage.getItem("taskList")!);
-      setTaskData(localData);
-    } else {
-      localStorage.setItem("taskList", JSON.stringify(initialData));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (toggleDialog === false) {
-      setPayloadForm({} as payloadForms);
-      setIsEdit(false);
-    }
-  }, [toggleDialog]);
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const { id, status } = payloadForm;
-
-    if (isEdit) {
-      const currentColumnId = localData.find((column) =>
-        column.tasks.some((task) => task.id === id),
-      )?.id;
-      // Editing existing task
-      if (currentColumnId) {
-        const currentColumn = localData.find(
-          (column) => column.id === currentColumnId,
-        );
-        const targetColumn = localData.find((column) => column.id === status);
-
-        if (currentColumn && targetColumn) {
-          // Remove task from current column
-          currentColumn.tasks = currentColumn.tasks.filter(
-            (task) => task.id !== id,
-          );
-
-          // Update task data
-          const updatedTask = { ...payloadForm, id };
-          targetColumn.tasks = [...targetColumn.tasks, updatedTask];
-
-          // Update localData
-          const updateData = localData.map((column) =>
-            column.id === currentColumnId
-              ? currentColumn
-              : column.id === status
-                ? targetColumn
-                : column,
-          );
-
-          localStorage.setItem("taskList", JSON.stringify(updateData));
-          setTaskData(updateData);
-        }
-      }
-    } else {
-      // Adding new task
-      const newId: string = Math.random()
-        .toString(36)
-        .slice(2, 11)
-        .toUpperCase();
-      const fullPayload = { ...payloadForm, id: `E-${newId}`, finish: false };
-      const targetColumn = localData.find((column) => column.id === status);
-
-      if (targetColumn) {
-        targetColumn.tasks = [...targetColumn.tasks, fullPayload];
-        const updateData = localData.map((column) =>
-          column.id === status ? targetColumn : column,
-        );
-
-        localStorage.setItem("taskList", JSON.stringify(updateData));
-        setTaskData(updateData);
-      }
-    }
-
-    // Reset the form and close the dialog
-    setPayloadForm({} as payloadForms);
-    setToggleDialog(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [username, setUsername] = useState("");
+  function functionChange(value: string) {
+    setUsername(value);
   }
-
-  function handleChange(value: string, name: string) {
-    setPayloadForm({
-      ...payloadForm,
-      [name]: value,
+  function functionSubmit() {
+    localStorage.setItem("username", username);
+    toast({
+      className: cn(
+        "top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4 border-0",
+      ),
+      variant: "success",
+      title: "Username Created",
+      description: "You will directed to homepage",
     });
+
+    setTimeout(() => {
+      navigate("/home");
+    }, 3000);
   }
 
   return (
     <>
-      <ThemeProvider defaultTheme={"light"} storageKey="vite-ui-theme">
-        <BaseLayout>
-          <div className="flex flex-col">
-            <div className="flex justify-evenly gap-8">
-              <DialogForm
-                buttonDesc="Create Task"
-                titleDialog="Your Journey Begins Here!"
-                titleDescription={`Every great achievement begins with a single task. Take the first step towards your dreams today. Let's get started!`}
-                functionSubmit={handleSubmit}
-                functionChange={handleChange}
-                formPayload={payloadForm}
-                isEdit={isEdit}
-                open={toggleDialog}
-                setOpen={setToggleDialog}
-              />
-            </div>
-            <TaskManager
-              setOpen={setToggleDialog}
-              listTask={taskData}
-              setListTask={setTaskData}
-              setEdit={setIsEdit}
-              setPayload={setPayloadForm}
-              formPayload={payloadForm}
+      <div className="mx-auto flex min-h-screen w-full flex-col justify-center gap-8">
+        <h1 className="text-3xl font-bold">
+          Welcome to <br /> Endabelyu Task Manager (ETM)
+        </h1>
+        <span className="self-center">
+          <p className="mb-4">Please input your username.</p>
+          {/* <form onSubmit={functionSubmit} className="flex gap-6"> */}
+          <span className="flex gap-4">
+            <Input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Endabelyu"
+              className="mx-auto"
+              onChange={(e) => {
+                functionChange(e.target.value);
+              }}
+              required
             />
-          </div>
-        </BaseLayout>
-      </ThemeProvider>
+            <Button type="button" onClick={functionSubmit}>
+              Enter
+            </Button>
+          </span>
+          {/* </form> */}
+        </span>
+      </div>
     </>
   );
 }
