@@ -4,6 +4,7 @@ import { DragEvent, useState } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { priorityDescription, statusDescription } from "@/lib/helper/option";
+import { useSearchParams } from "react-router-dom";
 // types.ts
 
 export type taskProps = {
@@ -27,6 +28,8 @@ const TaskManager = ({
   formPayload,
 }: taskProps) => {
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [searchParams] = useSearchParams();
+  const wspace = searchParams.get("wspace")!;
   const onDragStart = (
     event: DragEvent<HTMLDivElement>,
     taskId: string,
@@ -40,7 +43,7 @@ const TaskManager = ({
     event: DragEvent<HTMLDivElement>,
     destinationColumnId: string,
   ) => {
-    const localData: TaskList[] = JSON.parse(localStorage.getItem("taskList")!);
+    const localData: TaskList[] = JSON.parse(localStorage.getItem(wspace)!);
     const taskId = event.dataTransfer.getData("taskId");
     const sourceSectionId = event.dataTransfer.getData("sourceSectionId");
     // if (sourceSectionId === destinationColumnId && dragOverIndex === null)
@@ -79,7 +82,7 @@ const TaskManager = ({
           ? destinationColumn
           : column,
     );
-    localStorage.setItem("taskList", JSON.stringify(updateData));
+    localStorage.setItem(wspace, JSON.stringify(updateData));
     setListTask(
       listTask.map((column) =>
         column.id === sourceSection.id
@@ -94,11 +97,10 @@ const TaskManager = ({
 
   const onDragOver = (event: DragEvent<HTMLDivElement>, index: number) => {
     event.preventDefault();
-    console.log(index);
     setDragOverIndex(index);
   };
   const onDelete = (taskId: string, columnId: string) => {
-    const localData: TaskList[] = JSON.parse(localStorage.getItem("taskList")!);
+    const localData: TaskList[] = JSON.parse(localStorage.getItem(wspace)!);
     // if (sourceSectionId === destinationColumnId && dragOverIndex === null)
     //   return;
 
@@ -112,7 +114,7 @@ const TaskManager = ({
     const updateData = localData.map((column) =>
       column.id === columnId ? sourceSection : column,
     );
-    localStorage.setItem("taskList", JSON.stringify(updateData));
+    localStorage.setItem(wspace, JSON.stringify(updateData));
     setListTask(
       listTask.map((column) =>
         column.id === columnId ? sourceSection : column,
