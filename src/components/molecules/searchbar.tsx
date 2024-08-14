@@ -15,7 +15,7 @@ const Searchbar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [filteredTasks, setFilteredTasks] = useState<IFilteredTask[]>([]);
-  const [workspaces, setWorkspaces] = useState<workspaceData[]>([]);
+  const [setWorkspaces] = useState<workspaceData[]>([]);
   const navigate = useNavigate();
   useEffect(() => {
     const storedWorkspaces = getWorkspaces();

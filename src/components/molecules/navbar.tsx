@@ -1,8 +1,3 @@
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from "../ui/navigation-menu";
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
 import { useTheme } from "@/components/theme-provider";

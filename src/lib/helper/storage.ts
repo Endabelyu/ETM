@@ -1,5 +1,5 @@
 import { workspaceData } from "@/components/organism/baseLayout";
-import { Task, TaskList } from "@/models/task";
+import { TaskList } from "@/models/task";
 
 export function getDataStorage(key: string) {
   const data = JSON.parse(localStorage.getItem(key) || "[]");
