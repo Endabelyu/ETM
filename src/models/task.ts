@@ -22,12 +22,12 @@ export type payloadForms = {
 export const initialData: TaskList[] = [
   {
     id: "S-1",
-    title: "To Do",
+    title: "To-do",
     tasks: [],
   },
   {
     id: "S-2",
-    title: "Doing",
+    title: "Ongoing",
     tasks: [],
   },
   {
